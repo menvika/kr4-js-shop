@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Каталог букетов: поиск, фильтр по категории, сортировка и пагинация.">
+  <title>Каталог товаров — Учебный интернет-магазин</title>
+  <script>
+    /* Тема ставится до отрисовки страницы, чтобы не было «вспышки» светлой темы. */
+    try {
+      var savedTheme = JSON.parse(localStorage.getItem('kr4-theme'));
+      var dark = savedTheme ? savedTheme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    } catch (error) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="icon" href="images/icon.png" type="image/png">
+  <script src="js/data.js" defer></script>
+  <script src="js/utils.js" defer></script>
+  <script src="js/cart.js" defer></script>
+  <script src="js/favorites.js" defer></script>
+  <script src="js/theme.js" defer></script>
+  <script src="js/modal.js" defer></script>
+  <script src="js/validation.js" defer></script>
+  <script src="js/catalog.js" defer></script>
+  <script src="js/product.js" defer></script>
+  <script src="js/order.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Учебный интернет-магазин цветов">
+  <meta property="og:description" content="Учебный проект: JavaScript, DOM, события, формы и валидация.">
+  <meta property="og:image" content="https://menvika.github.io/kr4-js-shop/images/hero-1200.jpg">
+</head>
+<body data-page="catalog">
+  <a class="skip-link" href="#main">Перейти к основному содержимому</a>
+  <svg class="icon-sprite" aria-hidden="true" focusable="false" style="display: none">
+    <symbol id="icon-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="9" cy="21" r="1"></circle>
+      <circle cx="19" cy="21" r="1"></circle>
+      <path d="M2.5 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.6L21 7H6"></path>
+    </symbol>
+    <symbol id="icon-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8z"></path>
+    </symbol>
+    <symbol id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+    </symbol>
+    <symbol id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="4"></circle>
+      <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+    </symbol>
+  </svg>
+  <header>
+    <div class="site-header">
+      <nav class="site-nav" aria-label="Основная навигация">
+        <a class="site-logo" href="index.html" aria-label="FL — на главную">FL</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu" hidden>
+          <span class="nav-toggle__bars" aria-hidden="true"></span>
+          <span>Меню</span>
+        </button>
+        <ul class="site-nav__list" id="site-menu">
+            <li><a href="index.html">Главная</a></li>
+            <li><a href="catalog.html" aria-current="page">Каталог</a></li>
+            <li><a href="dostav.html">Доставка и оплата</a></li>
+            <li><a href="contacts.html">Контакты</a></li>
+        </ul>
+        <div class="site-nav__actions">
+          <button class="theme-toggle" type="button" id="theme-toggle" aria-pressed="false" aria-label="Включить тёмную тему">
+            <svg class="theme-toggle__moon" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-moon"></use></svg>
+            <svg class="theme-toggle__sun" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-sun"></use></svg>
+          </button>
+          <a class="cart-button cart-button--header" id="header-basket" href="cart.html" aria-label="Корзина">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-cart"></use></svg>
+            <span class="cart-badge" data-cart-count hidden>0</span>
+          </a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <nav class="breadcrumbs" aria-label="Хлебные крошки">
+      <a href="index.html">Главная</a>
+      <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+      <span aria-current="page">Каталог</span>
+    </nav>
+    <section class="section">
+      <h1>Каталог товаров</h1>
+      <p>Ищите букет по названию, выбирайте категорию и сортируйте список — страница обновляется сразу, без перезагрузки.</p>
+    </section>
+
+    <section class="catalog-layout">
+      <aside class="catalog-filters" aria-label="Фильтры каталога">
+        <details class="filters-toggle" open>
+          <summary><h2 class="filters-heading">Фильтры</h2></summary>
+
+          <form class="filters-form" id="filters-form" action="#" method="get">
+            <div class="form-field">
+              <label for="search-input">Поиск по названию</label>
+              <input id="search-input" name="q" type="search" placeholder="Например, пионы или роз" autocomplete="off" maxlength="60">
+            </div>
+
+            <div class="form-field">
+              <label for="category-select">Категория</label>
+              <select id="category-select" name="category">
+                <option value="all">Все категории</option>
+              </select>
+            </div>
+
+            <fieldset>
+              <legend>Цена, руб.</legend>
+              <label for="price-from">От</label>
+              <input id="price-from" name="price-from" type="number" min="0" inputmode="numeric" placeholder="0">
+              <label for="price-to">До</label>
+              <input id="price-to" name="price-to" type="number" min="0" inputmode="numeric" placeholder="20000">
+              <small class="filters-hint" id="price-hint" role="status"></small>
+            </fieldset>
+
+            <div class="filters-checks">
+              <label class="choice"><input type="checkbox" id="only-available" name="available"> Только в наличии</label>
+              <label class="choice"><input type="checkbox" id="only-favorites" name="favorites"> Только избранное (<span id="favorites-count">0</span>)</label>
+            </div>
+
+            <button class="button button--outline" type="button" id="reset-filters">Сбросить фильтры</button>
+          </form>
+        </details>
+      </aside>
+
+      <section class="catalog-products">
+        <div class="catalog-toolbar">
+          <h2>Список товаров</h2>
+          <div class="form-field catalog-sort">
+            <label for="sort-select">Сортировка</label>
+            <select id="sort-select" name="sort">
+              <option value="default">По умолчанию</option>
+              <option value="price-asc">Цена: по возрастанию</option>
+              <option value="price-desc">Цена: по убыванию</option>
+              <option value="title-asc">Название: А–Я</option>
+              <option value="title-desc">Название: Я–А</option>
+              <option value="rating-desc">Рейтинг: сначала высокий</option>
+            </select>
+          </div>
+        </div>
+        <p class="catalog-count" id="catalog-count" role="status" aria-live="polite"></p>
+
+        <div class="products-grid" id="catalog-grid">
+          <noscript><p>Для отображения каталога включите JavaScript.</p></noscript>
+        </div>
+        <div class="empty-state" id="catalog-empty" hidden></div>
+        <nav class="pagination" id="catalog-pagination" aria-label="Страницы каталога"></nav>
+      </section>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <img class="toast__image" data-src="images/cat_toast1.gif" alt="" width="240" height="240">
+    <span class="toast__text" id="toast-text"></span>
+  </div>
+  <dialog class="product-dialog" id="product-dialog" aria-labelledby="product-dialog-title">
+    <div class="product-dialog__body">
+      <button class="dialog-close" type="button" data-close-modal aria-label="Закрыть">×</button>
+      <img class="product-dialog__image" id="product-dialog-image" src="" alt="">
+      <div class="product-dialog__content">
+        <p class="dialog-eyebrow" id="product-dialog-eyebrow">Букет</p>
+        <h2 id="product-dialog-title">Название букета</h2>
+        <p class="product-dialog__rating" id="product-dialog-rating"></p>
+        <p id="product-dialog-description"></p>
+        <p class="product-page__stock" id="product-dialog-stock"></p>
+        <div class="product-dialog__meta">
+          <strong id="product-dialog-price">0 руб.</strong>
+          <div class="product-dialog__actions">
+            <a class="button button--outline" id="product-dialog-link" href="product.html">Страница товара</a>
+            <button class="favorite-button favorite-button--inline" type="button" id="product-dialog-favorite" data-action="toggle-favorite" data-id="1" aria-pressed="false" aria-label="В избранное">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-heart"></use></svg>
+            </button>
+            <button class="cart-button" type="button" id="product-dialog-cart" data-action="add-to-cart" data-id="1" aria-label="Добавить в корзину">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-cart"></use></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+  <footer>
+    <p>&copy; 2026 Учебный проект. Все права защищены.</p>
+    <p>Дисциплина: Фронтенд и бэкенд разработка</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Форма заявки с проверкой данных: имя, телефон, e-mail, дата и адрес.">
+  <title>Оформление заявки — Учебный интернет-магазин</title>
+  <script>
+    /* Тема ставится до отрисовки страницы, чтобы не было «вспышки» светлой темы. */
+    try {
+      var savedTheme = JSON.parse(localStorage.getItem('kr4-theme'));
+      var dark = savedTheme ? savedTheme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    } catch (error) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="icon" href="images/icon.png" type="image/png">
+  <script src="js/data.js" defer></script>
+  <script src="js/utils.js" defer></script>
+  <script src="js/cart.js" defer></script>
+  <script src="js/favorites.js" defer></script>
+  <script src="js/theme.js" defer></script>
+  <script src="js/modal.js" defer></script>
+  <script src="js/validation.js" defer></script>
+  <script src="js/catalog.js" defer></script>
+  <script src="js/product.js" defer></script>
+  <script src="js/order.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Учебный интернет-магазин цветов">
+  <meta property="og:description" content="Учебный проект: JavaScript, DOM, события, формы и валидация.">
+  <meta property="og:image" content="https://menvika.github.io/kr4-js-shop/images/hero-1200.jpg">
+</head>
+<body data-page="order">
+  <a class="skip-link" href="#main">Перейти к основному содержимому</a>
+  <svg class="icon-sprite" aria-hidden="true" focusable="false" style="display: none">
+    <symbol id="icon-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="9" cy="21" r="1"></circle>
+      <circle cx="19" cy="21" r="1"></circle>
+      <path d="M2.5 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.6L21 7H6"></path>
+    </symbol>
+    <symbol id="icon-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8z"></path>
+    </symbol>
+    <symbol id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+    </symbol>
+    <symbol id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="4"></circle>
+      <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+    </symbol>
+  </svg>
+  <header>
+    <div class="site-header">
+      <nav class="site-nav" aria-label="Основная навигация">
+        <a class="site-logo" href="index.html" aria-label="FL — на главную">FL</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu" hidden>
+          <span class="nav-toggle__bars" aria-hidden="true"></span>
+          <span>Меню</span>
+        </button>
+        <ul class="site-nav__list" id="site-menu">
+            <li><a href="index.html">Главная</a></li>
+            <li><a href="catalog.html" aria-current="page">Каталог</a></li>
+            <li><a href="dostav.html">Доставка и оплата</a></li>
+            <li><a href="contacts.html">Контакты</a></li>
+        </ul>
+        <div class="site-nav__actions">
+          <button class="theme-toggle" type="button" id="theme-toggle" aria-pressed="false" aria-label="Включить тёмную тему">
+            <svg class="theme-toggle__moon" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-moon"></use></svg>
+            <svg class="theme-toggle__sun" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-sun"></use></svg>
+          </button>
+          <a class="cart-button cart-button--header" id="header-basket" href="cart.html" aria-label="Корзина">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-cart"></use></svg>
+            <span class="cart-badge" data-cart-count hidden>0</span>
+          </a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <nav class="breadcrumbs" aria-label="Хлебные крошки">
+      <a href="index.html">Главная</a>
+      <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+      <span aria-current="page">Оформление заявки</span>
+    </nav>
+    <section class="order-page">
+      <h1>Оформление заявки</h1>
+      <p>
+        Заполните форму — мы подтвердим заказ по телефону. Обязательные поля отмечены звёздочкой
+        <span class="required-mark" aria-hidden="true">*</span>.
+      </p>
+
+      <div class="form-errors" id="order-errors" role="alert" tabindex="-1" hidden></div>
+
+      <form class="order-form order-form-page" id="order-form" action="#" method="post" novalidate>
+        <fieldset>
+          <legend>Контактные данные</legend>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="order-name">Имя <span class="required-mark" aria-hidden="true">*</span></label>
+              <input id="order-name" name="name" type="text" autocomplete="name" placeholder="Как к вам обращаться" required data-validate="name" data-label="Имя" data-required-message="Введите имя">
+            </div>
+            <div class="form-field">
+              <label for="order-phone">Телефон <span class="required-mark" aria-hidden="true">*</span></label>
+              <input id="order-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 900 000-00-00" required data-validate="phone" data-label="Телефон" data-required-message="Введите телефон">
+            </div>
+            <div class="form-field form-field--full">
+              <label for="order-email">E-mail</label>
+              <input id="order-email" name="email" type="email" autocomplete="email" placeholder="example@mail.ru" data-validate="email" data-label="E-mail">
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Заказ</legend>
+
+          <div class="order-cart-box" id="order-cart-box" hidden>
+            <h2 class="order-cart-box__title">Состав заказа из корзины</h2>
+            <ul id="order-cart-list"></ul>
+            <p class="order-cart-box__total" id="order-cart-total"></p>
+            <p><a href="cart.html">Изменить состав корзины</a></p>
+          </div>
+
+          <div class="form-grid" id="order-single-box">
+            <div class="form-field form-field--full">
+              <label for="order-product">Букет <span class="required-mark" aria-hidden="true">*</span></label>
+              <select id="order-product" name="product" required data-validate="product" data-label="Букет" data-required-message="Выберите букет"><option value="">Выберите букет</option></select>
+            </div>
+            <div class="form-field">
+              <label for="order-qty">Количество <span class="required-mark" aria-hidden="true">*</span></label>
+              <input id="order-qty" name="qty" type="number" min="1" max="20" value="1" inputmode="numeric" required data-validate="quantity" data-label="Количество" data-required-message="Укажите количество">
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="order-date">Дата доставки <span class="required-mark" aria-hidden="true">*</span></label>
+              <input id="order-date" name="date" type="date" required data-validate="date" data-label="Дата доставки" data-required-message="Выберите дату доставки">
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Получение</legend>
+          <div class="form-grid">
+            <div class="form-field form-field--full">
+              <label class="choice"><input type="radio" name="delivery" value="courier" checked> Курьером по адресу</label>
+              <label class="choice"><input type="radio" name="delivery" value="pickup"> Самовывоз из шоу-рума</label>
+            </div>
+            <div class="form-field form-field--full" id="address-field">
+              <label for="order-address">Адрес доставки <span class="required-mark" aria-hidden="true">*</span></label>
+              <input id="order-address" name="address" type="text" autocomplete="street-address" placeholder="Город, улица, дом, квартира" required data-validate="address" data-label="Адрес" data-required-message="Укажите адрес доставки">
+            </div>
+            <div class="form-field form-field--full">
+              <label for="order-comment">Комментарий к заказу</label>
+              <textarea id="order-comment" name="comment" rows="4" placeholder="Текст открытки, пожелания по времени" data-validate="comment" data-label="Комментарий" aria-describedby="comment-counter"></textarea>
+              <small class="field-counter" id="comment-counter">0 / 300</small>
+            </div>
+            <div class="form-field form-field--full form-field--checkbox">
+              <label for="order-agreement"><input id="order-agreement" name="agreement" type="checkbox" required data-validate="agreement" data-label="Согласие" data-required-message="Подтвердите согласие на обработку данных"> <span>Я согласен на обработку персональных данных <span class="required-mark" aria-hidden="true">*</span></span></label>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="form-actions">
+          <button type="submit" class="button" id="order-submit">Отправить заявку</button>
+          <button type="reset" class="button button--outline">Очистить форму</button>
+        </div>
+        <div id="order-status" role="status" aria-live="polite"></div>
+      </form>
+
+      <section class="order-result" id="order-result" tabindex="-1" aria-live="polite" hidden></section>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <img class="toast__image" data-src="images/cat_toast1.gif" alt="" width="240" height="240">
+    <span class="toast__text" id="toast-text"></span>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Учебный проект. Все права защищены.</p>
+    <p>Дисциплина: Фронтенд и бэкенд разработка</p>
+  </footer>
+</body>
+</html>

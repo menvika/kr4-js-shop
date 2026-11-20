@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Контакты магазина и форма обратной связи.">
+  <title>Контакты — Учебный интернет-магазин</title>
+  <script>
+    /* Тема ставится до отрисовки страницы, чтобы не было «вспышки» светлой темы. */
+    try {
+      var savedTheme = JSON.parse(localStorage.getItem('kr4-theme'));
+      var dark = savedTheme ? savedTheme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    } catch (error) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="icon" href="images/icon.png" type="image/png">
+  <script src="js/data.js" defer></script>
+  <script src="js/utils.js" defer></script>
+  <script src="js/cart.js" defer></script>
+  <script src="js/favorites.js" defer></script>
+  <script src="js/theme.js" defer></script>
+  <script src="js/modal.js" defer></script>
+  <script src="js/validation.js" defer></script>
+  <script src="js/catalog.js" defer></script>
+  <script src="js/product.js" defer></script>
+  <script src="js/order.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Учебный интернет-магазин цветов">
+  <meta property="og:description" content="Учебный проект: JavaScript, DOM, события, формы и валидация.">
+  <meta property="og:image" content="https://menvika.github.io/kr4-js-shop/images/hero-1200.jpg">
+</head>
+<body data-page="contacts">
+  <a class="skip-link" href="#main">Перейти к основному содержимому</a>
+  <svg class="icon-sprite" aria-hidden="true" focusable="false" style="display: none">
+    <symbol id="icon-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="9" cy="21" r="1"></circle>
+      <circle cx="19" cy="21" r="1"></circle>
+      <path d="M2.5 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.6L21 7H6"></path>
+    </symbol>
+    <symbol id="icon-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8z"></path>
+    </symbol>
+    <symbol id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+    </symbol>
+    <symbol id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="4"></circle>
+      <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+    </symbol>
+  </svg>
+  <header>
+    <div class="site-header">
+      <nav class="site-nav" aria-label="Основная навигация">
+        <a class="site-logo" href="index.html" aria-label="FL — на главную">FL</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu" hidden>
+          <span class="nav-toggle__bars" aria-hidden="true"></span>
+          <span>Меню</span>
+        </button>
+        <ul class="site-nav__list" id="site-menu">
+            <li><a href="index.html">Главная</a></li>
+            <li><a href="catalog.html">Каталог</a></li>
+            <li><a href="dostav.html">Доставка и оплата</a></li>
+            <li><a href="contacts.html" aria-current="page">Контакты</a></li>
+        </ul>
+        <div class="site-nav__actions">
+          <button class="theme-toggle" type="button" id="theme-toggle" aria-pressed="false" aria-label="Включить тёмную тему">
+            <svg class="theme-toggle__moon" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-moon"></use></svg>
+            <svg class="theme-toggle__sun" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-sun"></use></svg>
+          </button>
+          <a class="cart-button cart-button--header" id="header-basket" href="cart.html" aria-label="Корзина">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-cart"></use></svg>
+            <span class="cart-badge" data-cart-count hidden>0</span>
+          </a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+
+    <nav class="breadcrumbs" aria-label="Хлебные крошки">
+      <a href="index.html">Главная</a>
+      <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+      <span aria-current="page">Контакты</span>
+    </nav>
+
+    <section class="section">
+      <h1>Контакты</h1>
+      <p>
+        Свяжитесь с нами удобным способом — или оставьте заявку через форму
+        обратной связи, и мы перезвоним в течение рабочего дня.
+      </p>
+
+      <ul class="contact-list">
+        <li>
+          <span class="contact-list__label">Телефон</span>
+          <a href="tel:+79000000000">+7 (900) 000-00-00</a>
+        </li>
+        <li>
+          <span class="contact-list__label">Адрес</span>
+          г. Москва, учебный проект
+        </li>
+        <li>
+          <span class="contact-list__label">E-mail</span>
+          <a href="mailto:info@example.com">info@example.com</a>
+        </li>
+        <li>
+          <span class="contact-list__label">Часы работы</span>
+          ежедневно, 9:00–21:00
+        </li>
+        <li>
+          <span class="contact-list__label">Отдел корпоративных заказов</span>
+          <a href="mailto:corp@example.com">corp@example.com</a>
+        </li>
+        <li>
+          <span class="contact-list__label">Доставка</span>
+          Круглосуточно
+        </li>
+      </ul>
+    </section>
+
+    <section class="section" id="feedback">
+      <h2>Обратная связь</h2>
+      <p>
+        Есть вопрос по букету или хотите оформить заказ по телефону —
+        оставьте заявку, и мы свяжемся с вами сами.
+      </p>
+
+      <button type="button" class="button" id="open-order-dialog" data-open-modal="contact-order-dialog">Написать нам</button>
+    </section>
+  
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <img class="toast__image" data-src="images/cat_toast1.gif" alt="" width="240" height="240">
+    <span class="toast__text" id="toast-text"></span>
+  </div>
+  <dialog class="order-dialog" id="contact-order-dialog" aria-labelledby="contact-order-dialog-title">
+    <div class="order-dialog__body">
+      <button class="dialog-close" type="button" data-close-modal aria-label="Закрыть">×</button>
+
+      <p class="dialog-eyebrow">Обратная связь</p>
+      <h2 id="contact-order-dialog-title">Оставить заявку</h2>
+      <p class="order-dialog__lead">Заполните форму — ответим по указанному телефону или почте.</p>
+
+      <form class="order-form" id="contact-order-form" action="#" method="post" novalidate>
+        <div class="form-field">
+          <label for="contact-name">Имя</label>
+          <input id="contact-name" name="name" type="text" placeholder="Введите ваше имя" autocomplete="given-name" required data-validate="name" data-label="Имя" data-required-message="Введите имя">
+        </div>
+
+        <div class="form-field">
+          <label for="contact-email">E-mail</label>
+          <input id="contact-email" name="email" type="email" placeholder="example@mail.ru" autocomplete="email" required data-validate="email" data-label="E-mail" data-required-message="Введите e-mail">
+        </div>
+
+        <div class="form-field">
+          <label for="contact-phone">Телефон</label>
+          <input id="contact-phone" name="phone" type="tel" inputmode="tel" placeholder="+7 900 000-00-00" required data-validate="phone" data-label="Телефон" data-required-message="Введите телефон">
+        </div>
+
+        <div class="form-field">
+          <label for="contact-date">Дата связи</label>
+          <input id="contact-date" name="date" type="date" data-validate="date" data-label="Дата связи">
+        </div>
+
+        <div class="form-field">
+          <label for="contact-comment">Комментарий</label>
+          <textarea id="contact-comment" name="comment" rows="4" placeholder="Укажите дополнительную информацию" data-validate="comment" data-label="Комментарий"></textarea>
+        </div>
+
+        <div class="form-field form-field--checkbox">
+          <label for="contact-agreement">
+            <input id="contact-agreement" name="agreement" type="checkbox" required data-validate="agreement" data-label="Согласие" data-required-message="Подтвердите согласие на обработку данных"> Я согласен на обработку данных
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="button">Отправить заявку</button>
+        </div>
+      </form>
+
+      <div id="success-message" class="success-message" role="status" tabindex="-1" hidden>
+        <strong>Заявка успешно отправлена!</strong>
+        <p>Спасибо! Мы свяжемся с вами в ближайшее время.</p>
+      </div>
+    </div>
+  </dialog>
+  <footer>
+    <p>&copy; 2026 Учебный проект. Все права защищены.</p>
+    <p>Дисциплина: Фронтенд и бэкенд разработка</p>
+  </footer>
+</body>
+</html>

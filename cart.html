@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Корзина: количество, удаление, промокод и итоговая сумма.">
+  <title>Корзина — Учебный интернет-магазин</title>
+  <script>
+    /* Тема ставится до отрисовки страницы, чтобы не было «вспышки» светлой темы. */
+    try {
+      var savedTheme = JSON.parse(localStorage.getItem('kr4-theme'));
+      var dark = savedTheme ? savedTheme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    } catch (error) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="icon" href="images/icon.png" type="image/png">
+  <script src="js/data.js" defer></script>
+  <script src="js/utils.js" defer></script>
+  <script src="js/cart.js" defer></script>
+  <script src="js/favorites.js" defer></script>
+  <script src="js/theme.js" defer></script>
+  <script src="js/modal.js" defer></script>
+  <script src="js/validation.js" defer></script>
+  <script src="js/catalog.js" defer></script>
+  <script src="js/product.js" defer></script>
+  <script src="js/order.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Учебный интернет-магазин цветов">
+  <meta property="og:description" content="Учебный проект: JavaScript, DOM, события, формы и валидация.">
+  <meta property="og:image" content="https://menvika.github.io/kr4-js-shop/images/hero-1200.jpg">
+</head>
+<body data-page="cart">
+  <a class="skip-link" href="#main">Перейти к основному содержимому</a>
+  <svg class="icon-sprite" aria-hidden="true" focusable="false" style="display: none">
+    <symbol id="icon-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="9" cy="21" r="1"></circle>
+      <circle cx="19" cy="21" r="1"></circle>
+      <path d="M2.5 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.6L21 7H6"></path>
+    </symbol>
+    <symbol id="icon-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8z"></path>
+    </symbol>
+    <symbol id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+    </symbol>
+    <symbol id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="4"></circle>
+      <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+    </symbol>
+  </svg>
+  <header>
+    <div class="site-header">
+      <nav class="site-nav" aria-label="Основная навигация">
+        <a class="site-logo" href="index.html" aria-label="FL — на главную">FL</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu" hidden>
+          <span class="nav-toggle__bars" aria-hidden="true"></span>
+          <span>Меню</span>
+        </button>
+        <ul class="site-nav__list" id="site-menu">
+            <li><a href="index.html">Главная</a></li>
+            <li><a href="catalog.html">Каталог</a></li>
+            <li><a href="dostav.html">Доставка и оплата</a></li>
+            <li><a href="contacts.html">Контакты</a></li>
+        </ul>
+        <div class="site-nav__actions">
+          <button class="theme-toggle" type="button" id="theme-toggle" aria-pressed="false" aria-label="Включить тёмную тему">
+            <svg class="theme-toggle__moon" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-moon"></use></svg>
+            <svg class="theme-toggle__sun" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-sun"></use></svg>
+          </button>
+          <a class="cart-button cart-button--header" id="header-basket" href="cart.html" aria-label="Корзина" aria-current="page">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-cart"></use></svg>
+            <span class="cart-badge" data-cart-count hidden>0</span>
+          </a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <nav class="breadcrumbs" aria-label="Хлебные крошки">
+      <a href="index.html">Главная</a>
+      <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+      <span aria-current="page">Корзина</span>
+    </nav>
+    <section class="section cart-page">
+      <h1>Корзина</h1>
+
+      <div class="empty-state" id="cart-empty" hidden>
+        <h2 class="empty-state__title">Корзина пуста</h2>
+        <p>Добавьте букеты из каталога — они появятся здесь.</p>
+        <a class="button" href="catalog.html">Перейти в каталог</a>
+      </div>
+
+      <div class="cart-layout">
+        <ul class="cart-list" id="cart-list" aria-label="Товары в корзине"></ul>
+
+        <aside class="cart-summary" id="cart-summary" aria-label="Итого" hidden>
+          <h2>Ваш заказ</h2>
+          <dl class="cart-summary__rows">
+            <div><dt>Товаров</dt><dd id="cart-count">0</dd></div>
+            <div><dt>Сумма</dt><dd id="cart-subtotal">0 руб.</dd></div>
+            <div id="cart-discount-row" hidden><dt id="cart-discount-label">Скидка</dt><dd id="cart-discount">0 руб.</dd></div>
+            <div class="cart-summary__total"><dt>Итого</dt><dd id="cart-total">0 руб.</dd></div>
+          </dl>
+
+          <form class="promo-form" id="promo-form" action="#" novalidate>
+            <label for="promo-input">Промокод</label>
+            <div class="promo-form__row">
+              <input id="promo-input" name="promo" type="text" autocomplete="off" maxlength="20" placeholder="SPRING10">
+              <button class="button" type="submit">Применить</button>
+            </div>
+            <p class="promo-form__hint">Попробуйте SPRING10 или FLOWERS500 (от 5000 руб.).</p>
+            <p class="promo-form__message" id="promo-message" role="status" aria-live="polite"></p>
+            <p class="promo-form__applied" id="promo-applied" hidden>
+              <span id="promo-applied-text"></span>
+              <button class="link-button" type="button" id="promo-remove">Убрать</button>
+            </p>
+          </form>
+
+          <div class="cart-summary__actions">
+            <a class="button" href="order.html">Оформить заявку</a>
+            <button class="button button--outline" type="button" id="cart-clear">Очистить корзину</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <img class="toast__image" data-src="images/cat_toast1.gif" alt="" width="240" height="240">
+    <span class="toast__text" id="toast-text"></span>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Учебный проект. Все права защищены.</p>
+    <p>Дисциплина: Фронтенд и бэкенд разработка</p>
+  </footer>
+</body>
+</html>

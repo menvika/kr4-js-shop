@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Условия доставки и способы оплаты учебного интернет-магазина цветов.">
+  <title>Доставка и оплата — Учебный интернет-магазин</title>
+  <script>
+    /* Тема ставится до отрисовки страницы, чтобы не было «вспышки» светлой темы. */
+    try {
+      var savedTheme = JSON.parse(localStorage.getItem('kr4-theme'));
+      var dark = savedTheme ? savedTheme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    } catch (error) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="icon" href="images/icon.png" type="image/png">
+  <script src="js/data.js" defer></script>
+  <script src="js/utils.js" defer></script>
+  <script src="js/cart.js" defer></script>
+  <script src="js/favorites.js" defer></script>
+  <script src="js/theme.js" defer></script>
+  <script src="js/modal.js" defer></script>
+  <script src="js/validation.js" defer></script>
+  <script src="js/catalog.js" defer></script>
+  <script src="js/product.js" defer></script>
+  <script src="js/order.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Учебный интернет-магазин цветов">
+  <meta property="og:description" content="Учебный проект: JavaScript, DOM, события, формы и валидация.">
+  <meta property="og:image" content="https://menvika.github.io/kr4-js-shop/images/hero-1200.jpg">
+</head>
+<body data-page="dostav">
+  <a class="skip-link" href="#main">Перейти к основному содержимому</a>
+  <svg class="icon-sprite" aria-hidden="true" focusable="false" style="display: none">
+    <symbol id="icon-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="9" cy="21" r="1"></circle>
+      <circle cx="19" cy="21" r="1"></circle>
+      <path d="M2.5 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.6L21 7H6"></path>
+    </symbol>
+    <symbol id="icon-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8z"></path>
+    </symbol>
+    <symbol id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+    </symbol>
+    <symbol id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="4"></circle>
+      <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+    </symbol>
+  </svg>
+  <header>
+    <div class="site-header">
+      <nav class="site-nav" aria-label="Основная навигация">
+        <a class="site-logo" href="index.html" aria-label="FL — на главную">FL</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu" hidden>
+          <span class="nav-toggle__bars" aria-hidden="true"></span>
+          <span>Меню</span>
+        </button>
+        <ul class="site-nav__list" id="site-menu">
+            <li><a href="index.html">Главная</a></li>
+            <li><a href="catalog.html">Каталог</a></li>
+            <li><a href="dostav.html" aria-current="page">Доставка и оплата</a></li>
+            <li><a href="contacts.html">Контакты</a></li>
+        </ul>
+        <div class="site-nav__actions">
+          <button class="theme-toggle" type="button" id="theme-toggle" aria-pressed="false" aria-label="Включить тёмную тему">
+            <svg class="theme-toggle__moon" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-moon"></use></svg>
+            <svg class="theme-toggle__sun" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-sun"></use></svg>
+          </button>
+          <a class="cart-button cart-button--header" id="header-basket" href="cart.html" aria-label="Корзина">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-cart"></use></svg>
+            <span class="cart-badge" data-cart-count hidden>0</span>
+          </a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+
+    <nav class="breadcrumbs" aria-label="Хлебные крошки">
+      <a href="index.html">Главная</a>
+      <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+      <span aria-current="page">Доставка и оплата</span>
+    </nav>
+
+    <section class="section">
+      <h1>Доставка и оплата</h1>
+      <p>
+        Собираем букет в течение часа после подтверждения заказа и доставляем
+        его по указанному адресу. Ниже — сроки, стоимость по зонам и доступные
+        способы оплаты.
+      </p>
+    </section>
+
+    <section class="section" id="delivery">
+      <h2>Зоны и сроки доставки</h2>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <h3>В пределах города</h3>
+          <p>Доставим в течение 2–3 часов с момента подтверждения заказа, круглосуточно.</p>
+          <span class="info-card__price">от 600 руб.</span>
+        </div>
+    
+        <div class="info-card">
+          <h3>Пригород (до 20 км)</h3>
+          <p>Доставка в течение дня, время согласовывается с получателем заранее по телефону.</p>
+          <span class="info-card__price">от 1000 руб.</span>
+        </div>
+
+        <div class="info-card">
+          <h3>Самовывоз</h3>
+          <p>Заберите готовый букет из нашего шоу-рума в удобное время — сообщим, как только всё будет готово.</p>
+          <span class="info-card__price">бесплатно</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="payment">
+      <h2>Способы оплаты</h2>
+
+      <ul class="payment-methods">
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+            <line x1="2" y1="10" x2="22" y2="10"></line>
+          </svg>
+          <div>
+            <h3>Банковской картой онлайн</h3>
+            <p>Оплата на сайте при оформлении заказа — Visa, Mastercard, МИР.</p>
+          </div>
+        </li>
+
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 9V7a5 5 0 0 0-10 0v2"></path>
+            <rect x="3" y="9" width="18" height="12" rx="2"></rect>
+          </svg>
+          <div>
+            <h3>Картой курьеру</h3>
+            <p>Оплата переносным терминалом прямо в момент доставки букета.</p>
+          </div>
+        </li>
+
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          <div>
+            <h3>Наличными курьеру</h3>
+            <p>Расчёт наличными при получении заказа, сдача — без ограничений по сумме.</p>
+          </div>
+        </li>
+
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="3" width="16" height="18" rx="2"></rect>
+            <line x1="9" y1="8" x2="15" y2="8"></line>
+            <line x1="9" y1="12" x2="15" y2="12"></line>
+          </svg>
+          <div>
+            <h3>По счёту для организаций</h3>
+            <p>Выставляем счёт и закрывающие документы для юридических лиц.</p>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <section class="section" id="faq">
+      <h2>Частые вопросы</h2>
+
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>Можно ли выбрать точное время доставки?</summary>
+          <p>Да, при оформлении заявки укажите желаемую дату и добавьте время в комментарии — мы согласуем его с курьером.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Что делать, если получателя нет дома?</summary>
+          <p>Курьер свяжется по указанному телефону, чтобы уточнить новое время или адрес доставки.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Можно ли сделать доставку анонимной?</summary>
+          <p>Да, эта услуга указана в разделе «Дополнительные услуги» на главной странице — получатель не узнает, от кого букет.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Как оформить возврат или обмен?</summary>
+          <p>Свяжитесь с нами через страницу «Контакты» в течение суток с момента доставки — поможем решить вопрос.</p>
+        </details>
+      </div>
+    </section>
+  
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <img class="toast__image" data-src="images/cat_toast1.gif" alt="" width="240" height="240">
+    <span class="toast__text" id="toast-text"></span>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Учебный проект. Все права защищены.</p>
+    <p>Дисциплина: Фронтенд и бэкенд разработка</p>
+  </footer>
+</body>
+</html>
